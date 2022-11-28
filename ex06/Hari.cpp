@@ -38,24 +38,29 @@ void Hari::error()
 void Hari::complain(std::string level)
 {
 	int n;
+	std::string levels[4] = {"DEBUG", "INFO", "WARNING", "ERROR"};
 	f_ptr functions[4] = {
 		&Hari::debug, &Hari::info, &Hari::warning, &Hari::error
 	};
-	if (level.compare("DEBUG") == 0)
-		n = 0;
-	else if (level.compare("INFO") == 0)
-		n = 1;
-	else if (level.compare("WARNING") == 0)
-		n = 2;
-	else if (level.compare("ERROR") == 0)
-		n = 3;
-	else
+	n = -1;
+	for(int i = 0; i < 4; i++)
 	{
-		std::cout << "[ Probably complaining about insignificant problems ]" << std::endl;
-		return ;
+		if (levels[i] == level)
+			n = i;
 	}
-	for(int i = n; i < 4; i++)
+	switch (n)
 	{
-		(this->*(functions[i]))();
+		case 0:
+			(this->*(functions[0]))();
+		case 1:
+			(this->*(functions[1]))();
+		case 2:
+			(this->*(functions[2]))();
+		case 3:
+			(this->*(functions[3]))();
+			break;
+		default:
+			std::cout << "[ Probably complaining about insignificant problems ]" << std::endl;
+			break;
 	}
 }

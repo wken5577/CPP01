@@ -2,39 +2,40 @@
 #include <iostream>
 #include <fstream>
 
-std::string getContant(std::string filename)
+std::string getContent(std::string filename)
 {
 	std::ifstream	ifs(filename, std::ios::in);
-	std::string		contant = "";
+	std::string		content = "";
 
 	if (!ifs.is_open())
 	{
 		std::cout << "file open failed" << std::endl;
 		exit(0);
 	}
-	contant.resize(1024);
 	char c;
 	while (ifs.get(c))
-		contant += c;
+		content += c;
 	ifs.close();
-	return contant;
+	return content;
 }
 
-std::string replaceContant(std::string s1, std::string s2, std::string contant)
+std::string replaceContent(std::string s1, std::string s2, std::string content)
 {
-	std::size_t found = contant.find(s1);
+	if (s1 == s2)
+		return content;
+	std::size_t found = content.find(s1);
 
 	while (found != std::string::npos)
 	{
-		contant.erase(found, s1.size());
-		contant.insert(found, s2);
-		found = contant.find(s1);
+		content.erase(found, s1.size());
+		content.insert(found, s2);
+		found = content.find(s1);
 	}
 
-	return contant;
+	return content;
 }
 
-void writeContant(std::string contant, std::string newFilename)
+void writeContant(std::string content, std::string newFilename)
 {
 	std::ofstream ofs(newFilename, std::ios::trunc | std::ios::out);
 	if (!ofs.is_open())
@@ -42,13 +43,13 @@ void writeContant(std::string contant, std::string newFilename)
 		std::cout << "file open failed" << std::endl;
 		exit(0);
 	}
-	ofs.write(contant.data(), contant.length() + 1);
+	ofs << content;
 	ofs.close();
 }
 
 int main(int argc, char **argv)
 {
-	std::string contant;
+	std::string content;
 	std::string filename;
 
 	if (argc != 4)
@@ -58,7 +59,7 @@ int main(int argc, char **argv)
 	}
 
 	filename = argv[1];
-	contant = getContant(filename);
-	contant = replaceContant(argv[2], argv[3], contant);
-	writeContant(contant, filename + ".relpace");
+	content = getContent(filename);
+	content = replaceContent(argv[2], argv[3], content);
+	writeContant(content, filename + ".relpace");
 }
